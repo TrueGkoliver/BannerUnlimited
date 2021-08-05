@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "com.gkoliver.bannerunlimited.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.8",
+  "refmap": "bannerunlimited.refmap.json",
+  "mixins": [
+    "LoomContainerMixin",
+    "LoomScreenMixin",
+    "BannerItemMixin",
+    "BannerDuplicateCraftingRecipeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
