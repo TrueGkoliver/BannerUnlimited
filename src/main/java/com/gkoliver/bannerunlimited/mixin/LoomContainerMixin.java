@@ -1,18 +1,8 @@
 package com.gkoliver.bannerunlimited.mixin;
 
 import com.gkoliver.bannerunlimited.BannerUnlimited;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.LoomContainer;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.BannerPatternItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -22,30 +12,24 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 import javax.annotation.Nullable;
 
-@Mixin(LoomContainer.class)
-public abstract class LoomContainerMixin extends Container {
+@Mixin(LoomMenu.class)
+public abstract class LoomContainerMixin extends AbstractContainerMenu {
 
     @Shadow @Final
-    private Slot slotBanner;
+    private Slot bannerSlot; //Slot banner...
     @Shadow @Final
-    private Slot slotDye;
+    private Slot dyeSlot; //Slot dye
     @Shadow @Final
-    private Slot slotPattern;
+    private Slot patternSlot; //Slot pattern
     @Shadow @Final
-    private Slot output;
+    private Slot resultSlot; //Slot output?
     @Shadow
-    private long field_226622_j_;
-    @Shadow @Final
-    private IntReferenceHolder field_217034_d;
-    @Shadow
-    public void createOutputStack() {}
-    protected LoomContainerMixin(@Nullable ContainerType<?> type, int id) {
-        super(type, id);
+    private long lastSoundTime;
+    protected LoomContainerMixin(int p_39859_, Inventory p_39860_, final ContainerLevelAccess p_39861_) {
+        super(MenuType.LOOM, p_39859_);
     }
-    @ModifyConstant(method="Lnet/minecraft/inventory/container/LoomContainer;onCraftMatrixChanged(Lnet/minecraft/inventory/IInventory;)V", constant = @Constant(intValue = 6))
+    @ModifyConstant(method="Lnet/minecraft/world/inventory/LoomMenu;slotsChanged(Lnet/minecraft/world/Container;)V", constant = @Constant(intValue = 6))
     public int modifyCraftMatrixAmount(int old) {
         return BannerUnlimited.getAmountAllowed();
     }
-    @Shadow
-    public abstract boolean canInteractWith(PlayerEntity playerIn);
 }

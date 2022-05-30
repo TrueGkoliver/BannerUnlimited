@@ -2,17 +2,15 @@ package com.gkoliver.bannerunlimited.mixin;
 
 import com.gkoliver.bannerunlimited.BannerUnlimited;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.gui.screen.LoomScreen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.LoomContainer;
-import net.minecraft.item.BannerItem;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.tileentity.BannerTileEntity;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.gui.screens.inventory.LoomScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.LoomMenu;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -22,26 +20,26 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Mixin(LoomScreen.class)
-public abstract class LoomScreenMixin extends ContainerScreen<LoomContainer> {
+public abstract class LoomScreenMixin extends AbstractContainerScreen<LoomMenu> {
     @Nullable @Shadow
-    private List<Pair<BannerPattern, DyeColor>> field_230155_n_;
+    private List<Pair<BannerPattern, DyeColor>> resultBannerPatterns;
     @Shadow
-    private ItemStack field_214119_q;
+    private ItemStack bannerStack;
     @Shadow
-    private ItemStack field_214120_r;
+    private ItemStack dyeStack;
     @Shadow
-    private ItemStack field_214121_s;
+    private ItemStack patternStack;
     @Shadow
-    private boolean field_214123_u;
+    private boolean displayPatterns;
     @Shadow
-    private boolean field_214124_v;
+    private boolean displaySpecialPattern;
     @Shadow
-    private boolean field_214125_w;
+    private boolean hasMaxPatterns;
 
-    public LoomScreenMixin(LoomContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
-        super(screenContainer, inv, titleIn);
+    public LoomScreenMixin(LoomMenu a, Inventory b, Component c) {
+        super(a,b,c);
     }
-    @ModifyConstant(method="Lnet/minecraft/client/gui/screen/LoomScreen;func_214111_b()V", constant = @Constant(intValue = 6))
+    @ModifyConstant(method="Lnet/minecraft/client/gui/screens/inventory/LoomScreen;containerChanged()V", constant = @Constant(intValue = 6))
     private int modifyBannerPatternAmount(int orig) {
         return BannerUnlimited.getAmountAllowed();
     }
